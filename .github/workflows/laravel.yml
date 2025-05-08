@@ -36,16 +36,35 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-
-      - name: Install Git
+          
+      - name: Install Git and Composer on EC2
         run: |
-          sudo yum update -y
-          sudo yum install git -y
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
+            # Update system packages
+            sudo dnf update -y
 
-      - name: Install Composer
-        run: |
-          curl -sS https://getcomposer.org/installer | php
-          sudo mv composer.phar /usr/local/bin/composer
+            # Install Git
+            sudo dnf install git -y
+
+            # Install PHP and required extensions
+            sudo dnf install -y php-cli php-json php-zip curl unzip
+
+            # Install Composer
+            curl -sS https://getcomposer.org/installer -o composer-setup.php
+            HASH="$(curl -sS https://composer.github.io/installer.sig)"
+            php -r "if (hash_file('sha384', 'composer-setup.php') === '$HASH') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+            sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+            rm composer-setup.php
+
+            # Navigate to project directory
+            cd /var/www/html/pal
+
+            # Install PHP dependencies
+            composer install --no-dev --optimize-autoloader
+
+            # Run migrations
+            php artisan migrate --force
+          EOF
 
       - name: Deploy to EC2
         run: |
