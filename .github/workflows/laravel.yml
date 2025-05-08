@@ -36,16 +36,17 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
-      - name: Install Git on EC2
+      - name: Install Git
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
-          ssh -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
-            sudo apt-get update
-            sudo apt-get install -y git
-          EOF
-        env:
-          PRIVATE_KEY: ${{ secrets.EC2_SSH_KEY }}
+          if ! command -v git &> /dev/null
+          then
+            echo "Git not found, installing..."
+            sudo apt update
+            sudo apt install git -y
+          else
+            echo "Git is already installed"
+          fi
+
       - name: Install Composer
         run: |
           curl -sS https://getcomposer.org/installer | php
