@@ -39,7 +39,7 @@ jobs:
           
       - name: Install Git and Composer on EC2
         run: |
-          ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} /bin/bash  << 'EOF'
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << 'EOF'
             # Update system packages
             sudo dnf update -y
 
@@ -68,7 +68,7 @@ jobs:
 
       - name: Deploy to EC2
         run: |
-          ssh -tt -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} /bin/bash << 'EOF'
+          ssh -tt -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} << 'EOF'
             cd /var/www/html/pal
             git init
             git pull origin main
