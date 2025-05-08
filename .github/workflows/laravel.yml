@@ -74,7 +74,7 @@ jobs:
             git remote add origin https://github.com/pal-php/CiCdLaravel.git
             git pull origin main
             git clone https://github.com/pal-php/CiCdLaravel.git
-            sudo chown -R $USER:www-data storage
+            sudo chown -R nginx:nginx storage
             sudo chmod -R 775 storage
             composer install --no-dev --optimize-autoloader
             chmod +x artisan
