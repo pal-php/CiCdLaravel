@@ -64,7 +64,7 @@ jobs:
             #chmod +x artisan
             # Run migrations
             #php artisan migrate --force
-           EOF
+          EOF
 
       - name: Deploy to EC2
         run: |
