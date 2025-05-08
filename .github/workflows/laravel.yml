@@ -36,16 +36,11 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
+
       - name: Install Git
         run: |
-          if ! command -v git &> /dev/null
-          then
-            echo "Git not found, installing..."
-            sudo apt update
-            sudo apt install git -y
-          else
-            echo "Git is already installed"
-          fi
+          sudo yum update -y
+          sudo yum install git -y
 
       - name: Install Composer
         run: |
