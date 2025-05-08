@@ -39,7 +39,7 @@ jobs:
           
       - name: Install Git and Composer on EC2
         run: |
-          ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} 
+          ssh -i private_key.pem -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} /bin/bash  << 'EOF'
             # Update system packages
             sudo dnf update -y
 
@@ -64,7 +64,7 @@ jobs:
             #chmod +x artisan
             # Run migrations
             #php artisan migrate --force
-          
+           EOF
 
       - name: Deploy to EC2
         run: |
