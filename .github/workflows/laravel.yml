@@ -56,14 +56,14 @@ jobs:
             sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
             rm composer-setup.php
 
-          #   # Navigate to project directory
-          #   cd /var/www/html/pal
-          #   git pull origin main
-          #   # Install PHP dependencies
-          #   composer install --no-dev --optimize-autoloader
-          #   chmod +x artisan
-          #   # Run migrations
-          #   php artisan migrate --force
+            # Navigate to project directory
+            #cd /var/www/html/pal
+            #git pull origin main
+            # Install PHP dependencies
+            #composer install --no-dev --optimize-autoloader
+            #chmod +x artisan
+            # Run migrations
+            #php artisan migrate --force
            EOF
 
       - name: Deploy to EC2
