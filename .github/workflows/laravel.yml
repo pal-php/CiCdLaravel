@@ -56,22 +56,24 @@ jobs:
             sudo php composer-setup.php --install-dir=/usr/local/bin --filename=composer
             rm composer-setup.php
 
-            # Navigate to project directory
-            cd /var/www/html/pal
-            git pull origin main
-            # Install PHP dependencies
-            composer install --no-dev --optimize-autoloader
-            chmod +x artisan
-            # Run migrations
-            php artisan migrate --force
-          EOF
+          #   # Navigate to project directory
+          #   cd /var/www/html/pal
+          #   git pull origin main
+          #   # Install PHP dependencies
+          #   composer install --no-dev --optimize-autoloader
+          #   chmod +x artisan
+          #   # Run migrations
+          #   php artisan migrate --force
+           EOF
 
       - name: Deploy to EC2
         run: |
           ssh -tt -i private_key.pem -o StrictHostKeyChecking=no ${{ secrets.EC2_USERNAME }}@${{ secrets.EC2_HOST }} /bin/bash << 'EOF'
             cd /var/www/html/pal
+            git init
             git pull origin main
             composer install --no-dev --optimize-autoloader
+            chmod +x artisan
             php artisan migrate --force
             php artisan config:cache
             php artisan route:cache
